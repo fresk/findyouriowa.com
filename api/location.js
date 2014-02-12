@@ -1,6 +1,6 @@
 var restful = require('node-restful');
 var mongoose = restful.mongoose;
-mongoose.connect("mongodb://localhost/restful");
+mongoose.connect("mongodb://saskavi.com/findyouriowa_com");
 
 
 var locationSchema = mongoose.Schema({
@@ -9,13 +9,7 @@ var locationSchema = mongoose.Schema({
     'categories': [String],
     'tags': [String],
     'description': String,
-    'images': [{
-      'url': String, 
-      'filename': String, 
-      'mimetype': String, 
-      'size': Number,
-      'key': String
-    }],
+    'images': [String],
     'email': String,
     'phone': String,
     'website': String,
@@ -25,7 +19,10 @@ var locationSchema = mongoose.Schema({
     'state': String, 
     'zip': String, 
     'county': String, 
-    'loc': { type: [Number], index: '2dsphere'},
+    'loc': {
+      'type': { 'type': String },
+      'coordinates': [], 
+    } ,
     'facebook': String, 
     'twitter': String,
     'youtube': String,
@@ -33,6 +30,8 @@ var locationSchema = mongoose.Schema({
     'featured': String, 
     'featured_text': String
 });
+
+locationSchema.index({ loc: '2dsphere' });
 
 locationSchema.virtual('longitude').get(function () {
   return this.loc[0] || 0.0;
@@ -65,16 +64,10 @@ var parse_location = function(req, res, next){
   return next();
 };
 
-var output_location = function(req, res, next){
-  if (res.locals.bundle.latlon)
-    res.locals.bundle.latlon = ""+res.locals.bundle.latlon.join(',')
-  next();
-};
 
 var Location = restful.model( "location", locationSchema)
 Location.methods(['get', 'put', 'delete', 'post']);
 Location.before('post', parse_location);
 Location.before('put', parse_location);
-//Location.after('get', output_location);
 
 module.exports = Location;

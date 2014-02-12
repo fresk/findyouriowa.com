@@ -26,11 +26,22 @@ var init_view_model = function(){
 
 var load_locations  = function(){
   console.log('get locations');
-  $.getJSON('/api/location', function(data){
+  var opts = {}
+  opts.limit = getParameterByName('limit');
+  opts.skip = getParameterByName('skip');
+  $.getJSON('/api/location', opts, function(data){
     _.each(data, function(item){
       vm.locations.push(item);
     });
   });
+}
+
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
 

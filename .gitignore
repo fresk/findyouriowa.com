@@ -1,7 +1,12 @@
+# auto generated files
+client/css/style.css
+
+
+# default node .gitignore
 lib-cov
 *.seed
 *.log
-*.csv
+# *.csv
 *.dat
 *.out
 *.pid

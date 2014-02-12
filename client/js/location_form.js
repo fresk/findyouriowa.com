@@ -14,7 +14,7 @@ var location_default = {
     'state': '', 
     'zip': '', 
     'county': '', 
-    'latlon': '', 
+    'loc': {'type':'Point', 'coordinates':[0, 0]}, 
     'facebook': '', 
     'twitter': '',
     'youtube': '',
@@ -100,6 +100,16 @@ var init_view_models = function(data){
   location_view = new Vue({
     el: '#locationform',
     data: data,
+    computed:{
+      lon: {
+        $get: function(){ return this.loc.coordinates[0];},
+        $set: function(val){this.loc.coordinates[0] = parseFloat(val);}
+      },
+      lat: {
+        $get: function(){ return this.loc.coordinates[1];},
+        $set: function(val){this.loc.coordinates[1] = parseFloat(val);}
+      },
+    }
   });
 
   // vue doesnt work for select with multiple='multiple'
