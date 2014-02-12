@@ -1,0 +1,43 @@
+
+mixin form_field(id, label)
+  .form-group
+    label.col-sm-3.control-label(for=id) #{label}
+    .col-sm-9
+      if block
+        block
+
+
+
+mixin form_input(type, id, label)
+  +form_field(id, label)
+    input.form-control(type=type, id=id, name=id, v-model=id)
+
+mixin form_text(id, label)
+  +form_input('text', id, label)
+
+
+mixin form_textarea(id, label)
+  +form_field(id, label)
+    textarea.form-control(rows=6, id=id, name=id, v-model=id)
+    if block
+      block
+
+
+mixin form_select(id, label)
+  +form_field(id, label)
+    select.form-control(name=id, id=id, v-model=id)
+      block
+
+
+mixin form_multiselect(id, label)
+  +form_field(id, label)
+    select.form-control.multiselect(id=id, name=id, multiple='multiple')
+        block
+          
+          
+mixin form_with_hidden(id, label)
+  +form_field(id, label)
+    if block
+      block
+
+
