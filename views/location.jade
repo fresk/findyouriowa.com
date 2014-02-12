@@ -42,7 +42,7 @@ block content
               input.form-control(type='hidden', id='images', name='images', v-model='images')
               button.btn.btn-primary(id='btn_upload', type='button') Upload Images
               #upload-container(v-repeat='images')
-                img.img-thumbnail(src='{{url}}/convert?w=90&h=90&fit=crop')
+                img.img-thumbnail(src='{{url}}/convert?w=90&h=90&fit=crop' v-if='url')
 
 
           //location data

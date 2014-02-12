@@ -4,7 +4,7 @@ var location_default = {
     'categories': [],
     'tags': [],
     'description': '',
-    'images': [],
+    'images': [{url:''}],
     'email': '',
     'phone': '',
     'website': '',

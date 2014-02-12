@@ -9,7 +9,7 @@ var locationSchema = mongoose.Schema({
     'categories': [String],
     'tags': [String],
     'description': String,
-    'images': [String],
+    'images': [{url:String}],
     'email': String,
     'phone': String,
     'website': String,
