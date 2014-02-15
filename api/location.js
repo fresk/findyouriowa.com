@@ -75,7 +75,6 @@ locationSchema.methods.get_csv_safe_data = function () {
   var csv_safe = _.pick(this, simple_fields);
   csv_safe.tags = _(this.tags).compact().join(', ');
   csv_safe.categories = _(this.categories).compact().join(', ');
-  console.log(this.images);
   csv_safe.images = _(this.images).map(function(img){return img.url}).join(', ');
   return csv_safe;
 }
@@ -108,40 +107,10 @@ Location.before('put', parse_location);
 
 
 /*
- * Export to CSV
- */
-Location.route('export_csv', function(req, res, next){
-    res.setHeader('Content-disposition', 
-      'attachment; filename=locations.csv');
-    var fields;
-    var locations = _(res.locals.bundle)
-      .map(function(loc){ return loc.get_csv_safe_data() })
-      .tap(function(array){ fields = _.keys(array[0]) })
-      .map(function(loc){ return _.values(loc) });
-    csv().from.array(locations.value())
-      .to.options({ quoted:true, columns: fields, header:true, 
-        lineBreaks:'windows' })
-      .to.string(function(data, count){
-        res.send(data);
-      })
-});
-
-Location.before('csv', ['get'], function(req, res, next){
-  var query = Location.filter(req, Location.find());
-  query.exec(function(err, list){
-    res.locals.bundle = list;
-    next();
-  });
-});
-
-
-
-/*
  * Import CSV
  */
 Location.route('import_csv', ['get'], function(req, res, next){
   var source = req.query.source;
-  console.log("source:", source, "XXX");
   https.get(source, function(response) {
     var items = []
     csv()
@@ -157,15 +126,48 @@ Location.route('import_csv', ['get'], function(req, res, next){
         });
         loc.tags = _.compact(row.tags.split(/\s*,\s*/));
         loc.categories = _.compact(row.categories.split(/\s*,\s*/));
-        loc.save(console.log);
+        loc.save();
         items.push(loc);
       }).on('end', function(count){
-        console.log("DONE", count)
         res.send(items);
+      }).on('error', function(err){
+        res.send(400, err);
       });
       
   })
 });
+
+
+/*
+ * Export to CSV
+ */
+Location.route('export_csv', function(req, res, next){
+  var send_as_csv = function(list){
+    var csv_options = { 
+      quoted:true, 
+      columns:  _.keys(list[0].get_csv_safe_data()),
+      header:true, 
+      lineBreaks:'windows' 
+    };
+    var row_values = _(list).map(function(loc){ 
+      return _.values(loc.get_csv_safe_data()) 
+    });
+    csv()
+      .from.array(row_values.value())
+      .to.options(csv_options)
+      .to.string(function(data, count){
+        res.send(data);
+        next();
+      });
+  }
+  res.setHeader('Content-disposition', 'attachment; filename=locations.csv');
+  req.quer = Location.filter(req, Location.find());
+  req.quer.exec(function(err, list){
+   if (list.length) send_as_csv(list);
+  });
+});
+
+
 
 
 
