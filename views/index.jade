@@ -1,9 +1,16 @@
 extends layout
 
 extends layout
+
+append stylesheets
+  link(href='/css/vendor/ladda.css' rel="stylesheet")
+
 append vendor_scripts 
+  script(src='//api.filepicker.io/v1/filepicker.js' type='text/javascript')
   script(src='js/vendor/store.js' type='text/javascript')
   script(src='js/vendor/vue.js' type='text/javascript')
+  script(src='js/vendor/spin.min.js' type='text/javascript')
+  script(src='js/vendor/ladda.min.js' type='text/javascript')
 append scripts
   script(src='js/location_list.js' type='text/javascript')
 
@@ -12,7 +19,8 @@ block content
   .container#locationlist
     .row: .col-md-12
       .pull-right
-          button.btn.btn-default(v-on='click: import_csv()') Import CSV
+        button#csvbutton.btn.btn-primary.ladda-button(data-style="zoom-out" v-on='click: import_csv()') 
+            span.ladda-label Import CSV
           button.btn.btn-success(v-on='click: new_location()') New Location
       h2 Locations
     .row: .col-md-12

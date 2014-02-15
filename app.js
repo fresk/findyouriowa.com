@@ -35,6 +35,9 @@ app.get('/location/edit/:id', routes.new_location);
 var Location = require('./api/location');
 Location.register(app, '/api/location');
 
+//
+
+
 
 // start servering app
 http.createServer(app).listen(app.get('port'), function(){
