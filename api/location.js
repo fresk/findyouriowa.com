@@ -163,7 +163,14 @@ Location.route('export_csv', function(req, res, next){
   res.setHeader('Content-disposition', 'attachment; filename=locations.csv');
   req.quer = Location.filter(req, Location.find());
   req.quer.exec(function(err, list){
-   if (list.length) send_as_csv(list);
+  if(err) 
+    return res.send(500, err);
+  if (list.length) 
+    send_as_csv(list);
+  else
+    res.send("");
+    
+
   });
 });
 
