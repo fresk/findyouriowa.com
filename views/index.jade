@@ -11,6 +11,8 @@ append vendor_scripts
   script(src='js/vendor/vue.js' type='text/javascript')
   script(src='js/vendor/spin.min.js' type='text/javascript')
   script(src='js/vendor/ladda.min.js' type='text/javascript')
+  script(src='js/vendor/bootstrap-paginator.min.js' type='text/javascript')
+
 append scripts
   script(src='js/location_list.js' type='text/javascript')
 
@@ -24,15 +26,21 @@ block content
           button.btn.btn-success(v-on='click: new_location()') New Location
       h2 Locations
     .row: .col-md-12
-        table.table.table-hover
+      div(style='position: relative')
+        .spinkit-wrap
+          .spinkit-mask
+        table#loc-table.table.table-hover
           tr
-            th: span.glyphicon.glyphicon-star
+            //th: span.glyphicon.glyphicon-star
             th Name
             th Categories
             th County
           tr.location-row(v-repeat='locations' v-on='click: edit_location(this)')
-            td: span.glyphicon.glyphicon-ok(v-if='featured == "true"')
+            //td: span.glyphicon.glyphicon-ok(v-if='featured == "true"')
             td {{title}}
             td {{categories | aslist}}
             td {{county}}
-            
+
+    .row: .col-md12
+      .pull-right
+        ul#pager

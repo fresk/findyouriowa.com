@@ -5,8 +5,9 @@ var browserify = require('gulp-browserify');
 var stylus = require('gulp-stylus');
 var imagemin = require('gulp-imagemin');
 var livereload = require('gulp-livereload');
-var lr = require('tiny-lr');
 var nodemon = require('gulp-nodemon');
+var wait = require('gulp-wait');
+var lr = require('tiny-lr');
 
 
 
@@ -18,7 +19,10 @@ gulp.task('build', ['lint', 'client', 'stylus', 'images']);
 
 //build and serve using nodemon.
 gulp.task('serve', ['build'], function () {
-  nodemon({ script: 'app.js'});
+  nodemon({ 
+    script: 'app.js',
+    options: '-i client/*'
+  });
 });
 
 //run devserver with livereload.
@@ -26,7 +30,7 @@ gulp.task('develop', ['livereload', 'serve']);
 
 
 var paths = {
-  all: ['./**/*.js', '!./node_modules/**','!./client/js/vendor/**'],
+  all: ['./**/*.js', '!./node_modules/**','!./client/**/*.js'],
   stylesheets: './**/*.styl' ,
   images: './client/img/**/*'
 };
@@ -77,7 +81,11 @@ gulp.task('livereload', function(next){
   });  
   
   //notify livereload server of changes on frontend files
-  gulp.src(['./client/**/*.css', './client/**/*.html', './views/**/*.jade'])
+  gulp.src([
+    './client/**/*.css', 
+    './client/**/*.html', 
+    './client/**/*.js', 
+    './views/**/*.jade'])
     .pipe(watch())
     .pipe(livereload(lr_server));
 

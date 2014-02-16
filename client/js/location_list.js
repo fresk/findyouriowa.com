@@ -1,62 +1,83 @@
-
-$(document).ready(function(){
-  filepicker.setKey('Py0NB_yvTwGdkp6cz2Ee');
-  init_view_model();
-  setTimeout(load_locations, 10);
-});
-
+var DEFAULT_ITEMS_PER_PAGE = 18;
 
 Vue.filter('aslist', function (value) {
-    console.log('lsut', value);
     if(value)
       return value.join(', ');
 })
 
 
 
-
-var init_view_model = function(){
-  window.vm = new Vue({
-    el: "#locationlist",
-    data: {
-      'locations': [],
-      'title': 'location list'
-    },
-    methods: {
-      new_location: function(loc){
-        window.location = '/location/new';
-      },
-      edit_location: function(loc){
-        window.location = '/location/edit/'+loc._id;
-      },
-      import_csv: function(){
-        window.ladda_csv = Ladda.create(document.querySelector('#csvbutton'));
-        ladda_csv.start();
-        show_upload_dialog()     
-      }
-  }});
-}
-
-
-var load_locations  = function(){
-  console.log('get locations');
-  var opts = {}
-  opts.limit = getParameterByName('limit') || 50;
-  opts.skip = getParameterByName('skip') || 0;
-  $.getJSON('/api/location', opts, function(data){
-    _.each(data, function(item){
-      vm.locations.push(item);
+window.Page = PageController(function(){
+  this.el = "#locationlist";
+  
+  this.data = {
+    'locations': [],
+    'title': 'location list'
+  }
+  
+  this.methods.document_ready = function(){
+    var self = this;
+    filepicker.setKey('Py0NB_yvTwGdkp6cz2Ee');
+    $('#pager').bootstrapPaginator({
+        bootstrapMajorVersion: 3,
+        currentPage: 1,
+        numberOfPages:5,
+        totalPages: 34,
+        size: 'small',
+        onPageChanged: function(ev, oldPage, newPage){
+          self.page_change(oldPage, newPage);
+        }
     });
-  });
-}
+    this.load_locations(DEFAULT_ITEMS_PER_PAGE,0,false);
+  }
+
+  this.methods.page_change = function(oldPage, newPage){
+    //alert("page change " +oldPage+" "+newPage);
+
+    this.load_locations(DEFAULT_ITEMS_PER_PAGE, (newPage-1)*DEFAULT_ITEMS_PER_PAGE)
+  
+  }
 
 
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
+  this.methods.new_location = function(loc){
+      window.location = '/location/new';
+  }
+
+  this.methods.edit_location = function(loc){
+      window.location = '/location/edit/'+loc._id;
+  }
+
+  this.methods.import_csv = function(){
+      window.ladda_csv = Ladda.create(document.querySelector('#csvbutton'));
+      ladda_csv.start();
+      show_upload_dialog()     
+  }
+
+  this.methods.load_locations = function(limit, skip, animate){
+    var self = this;
+    if (animate !== false)
+      $('.spinkit-wrap').fadeIn();
+
+    $.getJSON('/api/location', {
+      limit: limit || this.getParameter('limit') || DEFAULT_ITEMS_PER_PAGE,
+      skip: skip || this.getParameter('skip') || 0 
+    })
+    .done(function(data){
+
+      if (animate !== false)
+        $('.spinkit-wrap').fadeOut();
+      self.add_items(data);
+    });
+  }
+
+  this.methods.add_items = function(items){
+    this.locations = items
+  }
+});
+
+
+
+
 
 
 var upload_complete = function(fp_blob){
@@ -90,4 +111,24 @@ var show_upload_dialog = function(){
 };
 
 
+
+
+
+function PageController(fn){
+  fn.prototype.methods = { 
+    documentReady: function(){}, 
+    getParameter: function (name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+      return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+  };
+
+  var controller =  new Vue(new fn());
+  document.addEventListener('DOMContentLoaded', function(ev){
+    controller.document_ready(ev);
+  });
+  return controller;
+}
 
