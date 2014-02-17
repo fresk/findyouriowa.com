@@ -103,16 +103,15 @@ function build_data_table(data){
       });
   }
 
-  });
+  })
 
-  setTimeout(function(){
-    $("table")
-    .order([0,'asc'])
+  //setTimeout(function(){
+    //.order([0,'asc'])
     .columns.adjust()
     .draw();
     $('.table-wrap').css('opacity', 1.0);
     $('.spinkit').css('opacity', 0.0);
-  }, 500);
+  //}, 500);
 
 
 }
