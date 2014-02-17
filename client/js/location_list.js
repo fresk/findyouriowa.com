@@ -1,4 +1,4 @@
-var DEFAULT_ITEMS_PER_PAGE = 18;
+var DEFAULT_ITEMS_PER_PAGE = 1000;
 
 Vue.filter('aslist', function (value) {
     if(value)
