@@ -4,6 +4,8 @@ extends layout
 
 append stylesheets
   link(href='/css/vendor/ladda.css' rel="stylesheet")
+  link(href='//cdn.datatables.net/1.10.0-beta.2/css/jquery.dataTables.css' rel="stylesheet")
+  link(href='//cdn.datatables.net/plug-ins/505bef35b56/integration/bootstrap/3/dataTables.bootstrap.css' rel="stylesheet")
 
 append vendor_scripts 
   script(src='//api.filepicker.io/v1/filepicker.js' type='text/javascript')
@@ -11,7 +13,8 @@ append vendor_scripts
   script(src='js/vendor/vue.js' type='text/javascript')
   script(src='js/vendor/spin.min.js' type='text/javascript')
   script(src='js/vendor/ladda.min.js' type='text/javascript')
-  script(src='js/vendor/bootstrap-paginator.min.js' type='text/javascript')
+  script(src='//cdn.datatables.net/plug-ins/505bef35b56/integration/bootstrap/3/dataTables.bootstrap.js' type='text/javascript')
+  script(src='//cdn.datatables.net/1.10.0-beta.2/js/jquery.dataTables.js' type='text/javascript')
 
 append scripts
   script(src='js/location_list.js' type='text/javascript')
@@ -29,17 +32,22 @@ block content
       div(style='position: relative')
         .spinkit-wrap
           .spinkit-mask
-        table#loc-table.table.table-hover
-          tr
-            //th: span.glyphicon.glyphicon-star
-            th Name
-            th Categories
-            th County
-          tr.location-row(v-repeat='locations' v-on='click: edit_location(this)')
+            .spinkit
+      div.table-wrap
+        table#loc-table.table.table-hover.datatable
+          thead
+            tr
+              //th: span.glyphicon.glyphicon-star
+              th Name
+              th Categories
+              th City
+              th County
+          tbody
+          //tr.location-row(v-repeat='locations' v-on='click: edit_location(this)')
             //td: span.glyphicon.glyphicon-ok(v-if='featured == "true"')
-            td {{title}}
-            td {{categories | aslist}}
-            td {{county}}
+            //td {{title}}
+            //td {{categories | aslist}}
+            //td {{county}}
 
     .row: .col-md12
       .pull-right

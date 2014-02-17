@@ -18,7 +18,7 @@ window.Page = PageController(function(){
   this.methods.document_ready = function(){
     var self = this;
     filepicker.setKey('Py0NB_yvTwGdkp6cz2Ee');
-    $('#pager').bootstrapPaginator({
+    /* $('#pager').bootstrapPaginator({
         bootstrapMajorVersion: 3,
         currentPage: 1,
         numberOfPages:5,
@@ -27,14 +27,14 @@ window.Page = PageController(function(){
         onPageChanged: function(ev, oldPage, newPage){
           self.page_change(oldPage, newPage);
         }
-    });
-    this.load_locations(DEFAULT_ITEMS_PER_PAGE,0,false);
+    });*/
+    //this.load_locations(DEFAULT_ITEMS_PER_PAGE,0,false);
+    $.getJSON('/api/location').done(build_data_table);
   }
 
   this.methods.page_change = function(oldPage, newPage){
     //alert("page change " +oldPage+" "+newPage);
-
-    this.load_locations(DEFAULT_ITEMS_PER_PAGE, (newPage-1)*DEFAULT_ITEMS_PER_PAGE)
+    //this.load_locations(DEFAULT_ITEMS_PER_PAGE, (newPage-1)*DEFAULT_ITEMS_PER_PAGE)
   
   }
 
@@ -53,30 +53,69 @@ window.Page = PageController(function(){
       show_upload_dialog()     
   }
 
+  /*
   this.methods.load_locations = function(limit, skip, animate){
     var self = this;
     if (animate !== false)
       $('.spinkit-wrap').fadeIn();
 
+    console.log("load");
     $.getJSON('/api/location', {
       limit: limit || this.getParameter('limit') || DEFAULT_ITEMS_PER_PAGE,
       skip: skip || this.getParameter('skip') || 0 
     })
     .done(function(data){
 
+      console.log("data");
       if (animate !== false)
         $('.spinkit-wrap').fadeOut();
       self.add_items(data);
     });
   }
+  */
 
   this.methods.add_items = function(items){
-    this.locations = items
+    //this.locations = items
+    //setTimeout(build_data_table
+   //}, 1000)
+   build_data_table(items);
   }
 });
 
 
+function build_data_table(data){
+  $('table').DataTable({
+    data: data,
+    searching: true,
+    ordering:  true,
+    lengthMenu: [ 15, 30, 60, 100 ],
+    pageLength: 15,
+    order: [0, 'asc'],
+    columns: [
+      { data: 'title' },
+      { data: 'categories' },
+      { data: 'city' },
+      { data: 'county' },
+    ],
+    rowCallback: function( row, data ) {
+      $(row).on('click', function(){
+        window.location = '/location/edit/'+data['_id'];
+      });
+  }
 
+  });
+
+  setTimeout(function(){
+    $("table")
+    .order([0,'asc'])
+    .columns.adjust()
+    .draw();
+    $('.table-wrap').css('opacity', 1.0);
+    $('.spinkit').css('opacity', 0.0);
+  }, 500);
+
+
+}
 
 
 
@@ -131,4 +170,9 @@ function PageController(fn){
   });
   return controller;
 }
+
+
+
+
+
 
