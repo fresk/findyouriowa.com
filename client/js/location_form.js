@@ -21,7 +21,7 @@ var location_default = {
     'instagram': '', 
     'featured': 'false', 
     'featured_text': ''
-}
+};
 
 
 $(document).ready(function() {
@@ -126,7 +126,7 @@ var save_progress = function(){
 
 
 var save_new_location = function(){
-  $.postJSON('/api/location', location_view.$data, function(data){
+  $.postJSON('/api/location', _.clone(location_view.$data), function(data){
     store.remove('location_data');
     window.location = "/";
     event.preventDefault();
@@ -136,6 +136,10 @@ var save_new_location = function(){
 }
 
 var save_location = function(event){
+  if (!location_view.tags)
+    location_view.tags = [];
+
+  console.log(location_view);
   if (location_view.$data._id == undefined)
     return save_new_location();
   
