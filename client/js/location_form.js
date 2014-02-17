@@ -1,42 +1,41 @@
 var location_default = {
-    'title': '',
-    'public': 'true',
-    'categories': [],
-    'tags': [],
-    'description': '',
-    'images': [{url:''}],
-    'email': '',
-    'phone': '',
-    'website': '',
-    'address1': '',
-    'address2': '', 
-    'city': '', 
-    'state': '', 
-    'zip': '', 
-    'county': '', 
-    'loc': {'type':'Point', 'coordinates':[0, 0]}, 
-    'facebook': '', 
-    'twitter': '',
-    'youtube': '',
-    'instagram': '', 
-    'featured': 'false', 
-    'featured_text': ''
+  'title': '',
+  'public': 'true',
+  'categories': [],
+  'tags': [],
+  'description': '',
+  'images': [{url:''}],
+  'email': '',
+  'phone': '',
+  'website': '',
+  'address1': '',
+  'address2': '', 
+  'city': '', 
+  'state': '', 
+  'zip': '', 
+  'county': '', 
+  'loc': {'type':'Point', 'coordinates':[0, 0]}, 
+  'facebook': '', 
+  'twitter': '',
+  'youtube': '',
+  'instagram': '', 
+  'featured': 'false', 
+  'featured_text': ''
 };
 
 
 $(document).ready(function() {
   if (!store.enabled)
     alert('Local storage is not supported by your browser. Please ' + 
-          'disabled "Private Mode", or upgrade to a modern browser');
- 
+    'disabled "Private Mode", or upgrade to a modern browser');
+
   // initialization for plgins and other 3rd party code
   vendor_init();
 
-  // attach event handlers for buttons etc.
-  attach_event_handlers();
+
 
   // initialize view bindings
-  
+
   if ( _.str.startsWith(window.location.pathname,"/location/edit/") ){
     var location_id = _.str.strRightBack(window.location.pathname, "/");
     $.getJSON('/api/location/'+location_id, function(data){
@@ -46,6 +45,8 @@ $(document).ready(function() {
   else {
     init_view_models(store.get('location_data') || location_default);
   }
+
+  // attach event handlers for buttons etc.
 
   // start saving progress every seconds
   setTimeout(save_progress, 1000);
@@ -77,10 +78,47 @@ var attach_event_handlers = function(){
   $('#tags').on('change', function(){
     location_view.tags = $(this).val();
   });
+
+  var location_id = _.str.strRightBack(window.location.pathname, "/");
+
+  if (location_id == "new"){
+    hide_delete_btn();
+    return
+  }
+
+
+  $('.confirm-delete').on('click', function(e) {
+    e.preventDefault();
+    console.log('go modal');
+    $('#myModal').modal();
+  });
+
+  $('#btnYes').click(function() {
+    // handle deletion here
+    console.log('yes');
+    $.ajax({
+      url: '/api/location/'+location_view.$data._id,
+      type: 'DELETE',
+      success: function(result) {
+        window.location = "/";
+      }
+    });
+  });
+
+
+
+}
+
+
+function hide_delete_btn(){
+
+$("#deletefields").hide();
 }
 
 
 var init_multi_selects  = function() {
+
+  attach_event_handlers();
   var _categories = $("#categories");
   _categories.val(location_view.categories);
   _categories.multiselect('refresh');
@@ -88,9 +126,9 @@ var init_multi_selects  = function() {
   if (!location_view.tags || location_view.tags.length == 0)
     _tags.tagsinput('removeAll');
   else
-    _.each(location_view.tags, function(val){ 
-      _tags.tagsinput('add', val) 
-    });
+  _.each(location_view.tags, function(val){ 
+    _tags.tagsinput('add', val) 
+  });
 };
 
 
@@ -142,7 +180,7 @@ var save_location = function(event){
   console.log(location_view);
   if (location_view.$data._id == undefined)
     return save_new_location();
-  
+
   var loc_url = '/api/location/' + location_view.$data._id;
   console.log("POSTING", loc_url, _.clone(location_view.$data));
   $.putJSON(loc_url, location_view.$data, function(data){
@@ -175,7 +213,7 @@ var show_upload_dialog = function(){
   var fp_options = {
     'services': [
       'COMPUTER', 'IMAGE_SEARCH', 'URL', 'GOOGLE_DRIVE', 'GMAIL', 'FACEBOOK', 
-      'INSTAGRAM', 'DROPBOX', 'BOX', 'FLICKR', 'SKYDRIVE', 'FTP', 'WEBDAV' ],
+    'INSTAGRAM', 'DROPBOX', 'BOX', 'FLICKR', 'SKYDRIVE', 'FTP', 'WEBDAV' ],
     'mimetype':'image/*', 
     'folders': false,
     'multiple': true,

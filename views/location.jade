@@ -13,7 +13,24 @@ append scripts
   script(src='/js/location_form.js' type='text/javascript')
 
 
+
+
 block content
+
+  #myModal.modal.fade(aria-hidden="true" role="dialog")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          a(data-dismiss="modal" aria-hidden="true" class="close") x
+          h3 Delete
+        .modal-body
+          p Are you Sure?
+        .modal-footer
+          button#btnYes.btn.btn-danger(href="#") Yes
+          button.btn.btn-secondary(data-dismiss="modal" aria-hidden="true" href="#" width="30%") No
+
+
+
   .container
     .row
       .col-sm-8
@@ -85,12 +102,23 @@ block content
             +form_textarea( 'featured_text', 'Featured Description')
 
 
+          fieldset#deletefields.fs-featured(style="margin-top: 6em; margin-bottom: 2em;")
+            h4 Delete This Location From the Database
+            .bg-danger(style="padding: 20px;")
+              p: h5(style="text-align: center; font-size: 2em; color: #FFF;")
+                | Warning! 
+              p: h5(style="text-align: center; font-size: 1.3em; color: #FFF; margin-bottom:2em;")
+                | This will permanently delete this record from the Database
+              p: a.btn.btn-danger.confirm-delete(style='width:100%; padding: 10px 10px;', href="#") DELETE
+
+
       .col-sm-4
 
         form.form-horizontal#formactions(data-spy="affix" data-offset-top="60" data-offset-bottom="200" style='width: 300px; margin-left: 50px;')          
           fieldset
             h4 Actions
-            p: a.btn.btn-default(style='width:100%', href="/") Back to List
+            p: a.btn.btn-default(style='width:100%', href="#") Back to List
             p: button#btn_save.btn.btn-success(style='width:100%', type='button') Save
             
 
+    
