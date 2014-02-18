@@ -84,6 +84,16 @@ window.Page = PageController(function(){
 
 
 function build_data_table(data){
+  for (var i=0;i<data.length;i++){
+  
+    cat_names = [];
+    for (var j=0;j<data[i].categories.length; j++){
+      cat_names.push(CATEGORIES[data[i].categories[j]]);
+    }
+    data[i]["_category_display"]  = cat_names.join(',')
+  }
+
+
   $('table').DataTable({
     data: data,
     searching: true,
@@ -93,7 +103,7 @@ function build_data_table(data){
     order: [0, 'asc'],
     columns: [
       { data: 'title' },
-      { data: 'categories' },
+      { data: '_category_display' },
       { data: 'city' },
       { data: 'county' },
     ],
