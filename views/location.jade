@@ -34,7 +34,6 @@ block content
       .col-sm-8
         
         include _form_mixins
-        include _categories
 
         form.form-horizontal#locationform
           fieldset#fs-main
@@ -44,7 +43,7 @@ block content
               option(value='true') Public Listing      
               option(value='false') Private Listing 
             +form_multiselect('categories', 'Categories') 
-              each val,key in dca_categories
+              each val,key in CATEGORIES
                 option(value=key) #{val}
             +form_field('tags', 'Tags') 
               select.form-control(v-model="tags", id='tags', multiple='multiple')

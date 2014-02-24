@@ -70,14 +70,16 @@ locationSchema.methods.get_csv_safe_data = function () {
   var simple_fields = ["title", "email", "phone", "website", "address1", 
     "address2", "city", "state", "zip", "county", "longitude", "latitude",
     "facebook", "twitter", "youtube", "instagram", "public", "featured", 
-    "featured_text"];
+    "featured_text", "_id"];
     
   var csv_safe = _.pick(this, simple_fields);
   csv_safe.tags = _(this.tags).compact().join(', ');
   csv_safe.categories = _(this.categories).compact().join(', ');
-  csv_safe.images = _(this.images).map(function(img){return img.url}).join(', ');
+  csv_safe.images = _(this.images).map(function(img){
+    return img.url;
+  }).join(', ');
   return csv_safe;
-}
+};
 
 
 /*
@@ -112,7 +114,7 @@ Location.before('put', parse_location);
 Location.route('import_csv', ['get'], function(req, res, next){
   var source = req.query.source;
   https.get(source, function(response) {
-    var items = []
+    var items = [];
     csv()
       .from.stream(response, {columns:true})
       .on('record', function(row){
@@ -132,16 +134,15 @@ Location.route('import_csv', ['get'], function(req, res, next){
         res.send(items);
       }).on('error', function(err){
         res.send(400, err);
-      });
-      
-  })
+      }); 
+  });
 });
 
 
 /*
  * Export to CSV
  */
-Location.route('export_csv', function(req, res, next){
+Location.route('export_csv', ['get'],  function(req, res, next){
   var send_as_csv = function(list){
     var csv_options = { 
       quoted:true, 
@@ -150,7 +151,7 @@ Location.route('export_csv', function(req, res, next){
       lineBreaks:'windows' 
     };
     var row_values = _(list).map(function(loc){ 
-      return _.values(loc.get_csv_safe_data()) 
+      return _.values(loc.get_csv_safe_data());
     });
     csv()
       .from.array(row_values.value())
@@ -159,7 +160,7 @@ Location.route('export_csv', function(req, res, next){
         res.send(data);
         next();
       });
-  }
+  };
   res.setHeader('Content-disposition', 'attachment; filename=locations.csv');
   req.quer = Location.filter(req, Location.find());
   req.quer.exec(function(err, list){
@@ -169,8 +170,6 @@ Location.route('export_csv', function(req, res, next){
     send_as_csv(list);
   else
     res.send("");
-    
-
   });
 });
 
