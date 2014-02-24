@@ -120,6 +120,10 @@ Location.route('import_csv', ['get'], function(req, res, next){
       .on('record', function(row){
         var specials = ['images', 'categories', 'tags', 
                         'longitude', 'latitude'];
+
+        if (!row._id || row._id === "" || row._id.length < 10)
+          specials.push('_id');
+        
         loc = new Location(_.omit(row, specials));
         loc.longitude = row.longitude;
         loc.latitude = row.latitude;
@@ -130,6 +134,8 @@ Location.route('import_csv', ['get'], function(req, res, next){
         loc.categories = _.compact(row.categories.split(/\s*,\s*/));
         loc.save();
         items.push(loc);
+        
+
       }).on('end', function(count){
         res.send(items);
       }).on('error', function(err){
