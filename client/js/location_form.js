@@ -118,6 +118,9 @@ $("#deletefields").hide();
 
 var init_multi_selects  = function() {
 
+
+
+
   attach_event_handlers();
   var _categories = $("#categories");
   _categories.val(location_view.categories);

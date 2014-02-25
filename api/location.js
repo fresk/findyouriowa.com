@@ -10,9 +10,12 @@ mongoose.connect("mongodb://saskavi.com/findyouriowa_com");
 /*
  * Location Schema
  */
+
+
+
 var locationSchema = mongoose.Schema({
     'title': String,
-    'public': String,
+    'public':  {type: String, set: str2bool}, 
     'categories': [String],
     'tags': [String],
     'description': String,
@@ -34,7 +37,7 @@ var locationSchema = mongoose.Schema({
     'twitter': String,
     'youtube': String,
     'instagram': String, 
-    'featured': String, 
+    'featured': {type: String, set: str2bool}, 
     'featured_text': String
 });
 
@@ -63,6 +66,7 @@ locationSchema.virtual('latitude').set(function (lat) {
 });
 
 
+
 /*
  * Instance Methods
  */
@@ -89,22 +93,22 @@ var Location = restful.model( "location", locationSchema);
 Location.methods(['get', 'put', 'delete', 'post']);
 
 
-/*
- * Parse incoming data on create/update / post/put
- */
-var parse_location = function(req, res, next){
-  if (req.body.featured == 'false')
-    req.body.featured = false;
-  if (req.body.featured == 'true')
-    req.body.featured = true;
-  if (req.body.public == 'false')
-    req.body.public = false;
-  if (req.body.public == 'true')
-    req.body.public = true;
-  return next();
-};
-Location.before('post', parse_location);
-Location.before('put', parse_location);
+ 
+ /*
+ * Type Cast various string representations to boolean
+ */    
+function str2bool(value){
+  if (typeof value === "boolean")
+    return ""+value;
+  if (typeof value === "string"){
+    var v = value.toLowerCase();
+    if (v === "0" || v === "no" || v == "false") 
+      return ""+false;
+    else
+      return ""+!!v;
+  }
+  return ""+!!value;
+}                   
 
 
 

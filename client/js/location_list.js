@@ -134,6 +134,7 @@ var upload_complete = function(fp_blob){
         function(data){
           console.log(data);
           ladda_csv.stop();
+          location.reload();
         });
 };
 
