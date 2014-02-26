@@ -15,8 +15,8 @@ var CATEGORIES = {
   "science"                      : "Science Center",
   "botany"                       : "Garden/Botanical Center ",
   "performance"                  : "Performance Venue/Concert Hall",
-  "theater"                      : " Theater",
-  "movie"                        : "Movie Theater ",
+  "theater"                      : "Theater",
+  "movie"                        : "Movie Theater",
   "arts_council"                 : "Arts Commission or Council",
   "cultural_district"            : "Cultural/Entertainment District",
   "national_historical_register" : "National Historical Register",
@@ -36,6 +36,7 @@ var CATEGORIES = {
   "amphitheater"                 : "Amphitheater or Riverwalk",
   "university"                   : "College or University",
   "other"                        : "Other"
+  "historic_district"            : "Historic Districts"
 };
 
 
