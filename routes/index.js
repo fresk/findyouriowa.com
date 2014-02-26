@@ -23,6 +23,7 @@ var CATEGORIES = {
   "national_historic_landmark"   : "National Historical Landmark",
   "local_landmark"               : "Local Landmark",
   "historic_site"                : "State Historic Site",
+  "historic_district"            : "Historic Districts",
   "honored_iowan"                : "Honored Iowan Birthplace",
   "famous_iowan"                 : "Famous Iowan Birthplace",
   "iowa_award"                   : "Iowa Award Recipient Birthplace",
@@ -36,7 +37,6 @@ var CATEGORIES = {
   "amphitheater"                 : "Amphitheater or Riverwalk",
   "university"                   : "College or University",
   "other"                        : "Other"
-  "historic_district"            : "Historic Districts"
 };
 
 
