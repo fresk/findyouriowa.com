@@ -71,10 +71,10 @@ locationSchema.virtual('latitude').set(function (lat) {
  * Instance Methods
  */
 locationSchema.methods.get_csv_safe_data = function () {
-  var simple_fields = ["title", "email", "phone", "website", "address1", 
-    "address2", "city", "state", "zip", "county", "longitude", "latitude",
-    "facebook", "twitter", "youtube", "instagram", "public", "featured", 
-    "featured_text", "_id"];
+  var simple_fields = ["title", "description", "email", "phone", "website", 
+    "address1", "address2", "city", "state", "zip", "county", "longitude", 
+    "latitude", "facebook", "twitter", "youtube", "instagram", "public", 
+    "featured", "featured_text", "_id"];
     
   var csv_safe = _.pick(this, simple_fields);
   csv_safe.tags = _(this.tags).compact().join(', ');
