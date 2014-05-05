@@ -6,16 +6,17 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "csv": "^0.3.7",
+    "csvtojson": "~0.1.7",
+    "director": "~1.2.2",
     "express": "3.4.8",
     "jade": "*",
-    "stylus": "~0.42.2",
-    "director": "~1.2.2",
-    "resourceful": "~0.2.3",
-    "restful": "~0.2.3",
+    "lodash": "~2.4.1",
     "mongoose": "~3.8.7",
     "node-restful": "~0.1.14",
-    "csvtojson": "~0.1.7",
-    "lodash": "~2.4.1"
+    "resourceful": "~0.2.3",
+    "restful": "~0.2.3",
+    "stylus": "~0.42.2"
   },
   "devDependencies": {
     "gulp": "~3.5.0",
