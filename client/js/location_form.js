@@ -4,29 +4,29 @@ var location_default = {
   'categories': [],
   'tags': [],
   'description': '',
-  'images': [{url:''}],
+  'images': [],
   'email': '',
   'phone': '',
   'website': '',
   'address1': '',
-  'address2': '', 
-  'city': '', 
-  'state': '', 
-  'zip': '', 
-  'county': '', 
-  'loc': {'type':'Point', 'coordinates':[0, 0]}, 
-  'facebook': '', 
+  'address2': '',
+  'city': '',
+  'state': '',
+  'zip': '',
+  'county': '',
+  'loc': {'type':'Point', 'coordinates':[0, 0]},
+  'facebook': '',
   'twitter': '',
   'youtube': '',
-  'instagram': '', 
-  'featured': 'false', 
+  'instagram': '',
+  'featured': 'false',
   'featured_text': ''
 };
 
 
 $(document).ready(function() {
   if (!store.enabled)
-    alert('Local storage is not supported by your browser. Please ' + 
+    alert('Local storage is not supported by your browser. Please ' +
     'disabled "Private Mode", or upgrade to a modern browser');
 
   // initialization for plgins and other 3rd party code
@@ -56,9 +56,9 @@ $(document).ready(function() {
 var vendor_init = function(){
   // vuejs.com
   Vue.config('debug', true);
-  // filepicker.io 
+  // filepicker.io
   filepicker.setKey('Py0NB_yvTwGdkp6cz2Ee');
-  // bootstrap-multiselect 
+  // bootstrap-multiselect
   $('#categories').multiselect({maxHeight: 400});
   // bootstrap-tagsinput
   $('#tags').tagsinput({
@@ -129,15 +129,16 @@ var init_multi_selects  = function() {
   if (!location_view.tags || location_view.tags.length == 0)
     _tags.tagsinput('removeAll');
   else
-  _.each(location_view.tags, function(val){ 
-    _tags.tagsinput('add', val) 
+  _.each(location_view.tags, function(val){
+    _tags.tagsinput('add', val)
   });
 };
 
 
 
 var init_view_models = function(data){
-  // View - Data bindinga 
+  // View - Data bindinga
+  console.log(data);
   location_view = new Vue({
     el: '#locationform',
     data: data,
@@ -159,7 +160,8 @@ var init_view_models = function(data){
 
 
 var save_progress = function(){
-  if (location_view.$data._id)
+
+  if (window.location_view===undefined || location_view.$data._id)
     return;
   store.set('location_data', location_view.$data);
   setTimeout(save_progress, 5000);
@@ -199,7 +201,7 @@ var save_location = function(event){
 var upload_complete = function(fp_blobs){
   _.each(fp_blobs, function(blob){
     console.log("upload complete", blob);
-    location_view.images.push(blob)
+    location_view.images.push(blob.url)
   });
 };
 
@@ -215,9 +217,9 @@ var show_upload_dialog = function(){
   };
   var fp_options = {
     'services': [
-      'COMPUTER', 'IMAGE_SEARCH', 'URL', 'GOOGLE_DRIVE', 'GMAIL', 'FACEBOOK', 
+      'COMPUTER', 'IMAGE_SEARCH', 'URL', 'GOOGLE_DRIVE', 'GMAIL', 'FACEBOOK',
     'INSTAGRAM', 'DROPBOX', 'BOX', 'FLICKR', 'SKYDRIVE', 'FTP', 'WEBDAV' ],
-    'mimetype':'image/*', 
+    'mimetype':'image/*',
     'folders': false,
     'multiple': true,
     'container': 'modal'

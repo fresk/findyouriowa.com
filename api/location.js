@@ -19,7 +19,7 @@ var locationSchema = mongoose.Schema({
     'categories': [String],
     'tags': [String],
     'description': String,
-    'images': [{url:String}],
+    'images': [String],
     'email': String,
     'phone': String,
     'website': String,
@@ -79,9 +79,7 @@ locationSchema.methods.get_csv_safe_data = function () {
   var csv_safe = _.pick(this, simple_fields);
   csv_safe.tags = _(this.tags).compact().join(', ');
   csv_safe.categories = _(this.categories).compact().join(', ');
-  csv_safe.images = _(this.images).map(function(img){
-    return img.url;
-  }).join(', ');
+  csv_safe.images = _(this.images).compact().join(', ');
   return csv_safe;
 };
 
@@ -122,6 +120,7 @@ Location.route('import_csv', ['get'], function(req, res, next){
     csv()
       .from.stream(response, {columns:true})
       .on('record', function(row){
+          console.log(row.images);
         var specials = ['images', 'categories', 'tags',
                         'longitude', 'latitude', '_id'];
 
@@ -134,9 +133,7 @@ Location.route('import_csv', ['get'], function(req, res, next){
             var loc = new Location(_.omit(row, specials));
             loc.longitude = parseFloat(row.longitude) || 0.0;
             loc.latitude = parseFloat(row.latitude) || 0.0;
-            loc.images = _.map(row.images.split(/\s*,\s*/), function(img){
-              return {url:img};
-            });
+            loc.images = _.compact(row.images.split(/\s*,\s*/));
              loc.tags = _.map(_.compact(row.tags.split(/\s*,\s*/)), function(s){return s.trim()});
             loc.categories = _.map(_.compact(row.categories.split(/\s*,\s*/)), function(s){return s.trim()});
             loc.save(function(err, l){
@@ -151,9 +148,8 @@ Location.route('import_csv', ['get'], function(req, res, next){
             var loc = _.omit(row, specials);
             loc.longitude = row.longitude;
             loc.latitude = row.latitude;
-            loc.images = _.map(row.images.split(/\s*,\s*/), function(img){
-              return {url:img.trim()};
-            });
+            loc.images = _.compact(row.images.split(/\s*,\s*/));
+            console.log(loc.images);
             loc.tags = _.map(_.compact(row.tags.split(/\s*,\s*/)), function(s){return s.trim()});
             loc.categories = _.map(_.compact(row.categories.split(/\s*,\s*/)), function(s){return s.trim()});
             Location.update({'_id': row._id }, {$set: loc});

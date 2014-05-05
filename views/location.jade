@@ -8,7 +8,8 @@ append vendor_scripts
   script(src='/js/vendor/bootstrap-multiselect.js' type='text/javascript')
   script(src='/js/vendor/bootstrap-tagsinput.js' type='text/javascript')
   script(src='/js/vendor/store.js' type='text/javascript')
-  script(src='/js/vendor/vue.js' type='text/javascript')
+  //script(src='/js/vendor/vue.js' type='text/javascript')
+  script(src='http://cdnjs.cloudflare.com/ajax/libs/vue/0.10.4/vue.min.js' type='text/javascript')
 append scripts
   script(src='/js/location_form.js' type='text/javascript')
 
@@ -55,11 +56,11 @@ block content
             +form_field('images', 'Images')
               input.form-control(type='hidden', id='images', name='images', v-model='images')
               button.btn.btn-primary(id='btn_upload', type='button') Upload Images
-              #upload-container(v-repeat='images')
+              #upload-container()
                 //if (str.search(url, 'filepicker'))
                 //  img.img-thumbnail(src='{{url}}/convert?w=90&h=90&fit=crop' v-if='url')
                 //else
-                img.img-thumbnail(src='{{url}}' v-if='url' style="width:90px; height:90px;")
+                img.img-thumbnail(src='{{$value}}' v-repeat="images" style="width:90px; height:90px;")
 
 
 
